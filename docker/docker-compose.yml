@@ -12,24 +12,30 @@ services:
       - mysql
       - elasticsearch
     environment:
-      - DB_HOST=db
+      - DB_HOST=mysql
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_NAME=elasticgo
+      - DB_NAME=api_go_db
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     networks:
       - mynetwork
 
   mysql:
     container_name: mysql_go
-    image: mysql:8.0
+    image: mysql
+    command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password' ]
     ports:
-      - "3307:3306"
-    environment:
-      - MYSQL_DATABASE=api_go_db
-      - MYSQL_ROOT_PASSWORD=root
+      - "3308:3306"
     volumes:
-      - db-data:/var/lib/mysql
+      - ./db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "--user=root", "--password=", "--host=127.0.0.1", "ping", "--silent" ]
+      interval: 2s
+      timeout: 10s
+      retries: 10
     networks:
       - mynetwork
 
@@ -42,13 +48,13 @@ services:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - es-data:/usr/share/elasticsearch/data
+      - ./elastic-data:/usr/share/elasticsearch/data
     networks:
       - mynetwork
 
 volumes:
   db-data:
-  es-data:
+  elastic-data:
 
 networks:
   mynetwork:

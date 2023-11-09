@@ -15,8 +15,8 @@ const (
 	port = 8080
 
 	dbUser = "root"
-	dbPass = "root"
-	dbHost = "localhost"
+	dbPass = ""
+	dbHost = "mysql"
 	dbPort = "3306"
 	dbName = "api_go_db"
 )
