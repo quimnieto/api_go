@@ -3,7 +3,7 @@ package bootstrap
 import "api_go/internal/platform/server"
 
 const (
-	host = "localhost"
+	host = "0.0.0.0"
 	port = 8080
 )
 
