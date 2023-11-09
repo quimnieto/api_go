@@ -32,13 +32,15 @@ func Run() error {
 	}
 
 	commandBus := bus.NewCommandBus()
+	queryBus := bus.NewQueryBus()
 
 	courseRepository := mysql.NewCourseRepository(db)
 	courseCreator := create.NewCourseCreator(courseRepository)
 	createCourseCommandHandler := create.NewCreateCourseCommandHandler(courseCreator)
+	
 	commandBus.Register(create.CourseCommandType, createCourseCommandHandler)
 
-	srv := server.New(host, port, commandBus)
+	srv := server.New(host, port, commandBus, queryBus)
 
 	return srv.Run()
 }

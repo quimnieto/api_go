@@ -2,9 +2,9 @@ package command
 
 import "context"
 
-type Bus interface {
+type CommandBus interface {
 	Dispatch(context.Context, Command) error
-	Register(Type, Handler)
+	Register(Type, CommandHandler)
 }
 
 type Type string
@@ -13,6 +13,6 @@ type Command interface {
 	Type() Type
 }
 
-type Handler interface {
+type CommandHandler interface {
 	Handle(context.Context, Command) error
 }

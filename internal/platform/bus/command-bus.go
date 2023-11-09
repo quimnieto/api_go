@@ -7,12 +7,12 @@ import (
 )
 
 type CommandBus struct {
-	handlers map[command.Type]command.Handler
+	handlers map[command.Type]command.CommandHandler
 }
 
 func NewCommandBus() *CommandBus {
 	return &CommandBus{
-		handlers: make(map[command.Type]command.Handler),
+		handlers: make(map[command.Type]command.CommandHandler),
 	}
 }
 
@@ -33,6 +33,6 @@ func (b *CommandBus) Dispatch(ctx context.Context, cmd command.Command) error {
 	return nil
 }
 
-func (b *CommandBus) Register(cmdType command.Type, handler command.Handler) {
+func (b *CommandBus) Register(cmdType command.Type, handler command.CommandHandler) {
 	b.handlers[cmdType] = handler
 }

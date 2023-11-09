@@ -6,7 +6,7 @@ import (
 	"errors"
 )
 
-const CourseCommandType command.Type = "command.create.course"
+const CreateCourseCommandType command.Type = "command.create.course"
 
 type CreateCourseCommand struct {
 	id       string
@@ -23,7 +23,7 @@ func NewCreateCourseCommand(id, name, duration string) CreateCourseCommand {
 }
 
 func (command CreateCourseCommand) Type() command.Type {
-	return CourseCommandType
+	return CreateCourseCommandType
 }
 
 type CreateCourseCommandHandler struct {

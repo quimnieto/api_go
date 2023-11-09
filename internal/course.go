@@ -42,19 +42,19 @@ func NewCourse(id, name, duration string) (Course, error) {
 }
 
 func (c Course) Id() string {
-	return c.id.value
+	return c.id.Value
 }
 
 func (c Course) Name() string {
-	return c.name.value
+	return c.name.Value
 }
 
 func (c Course) Duration() string {
-	return c.duration.value
+	return c.duration.Value
 }
 
 type CourseId struct {
-	value string
+	Value string
 }
 
 var ErrInvalidCourseID = errors.New("invalid Course ID")
@@ -67,12 +67,12 @@ func NewCourseId(value string) (CourseId, error) {
 	}
 
 	return CourseId{
-		value: v.String(),
+		Value: v.String(),
 	}, nil
 }
 
 type CourseName struct {
-	value string
+	Value string
 }
 
 var ErrInvalidCourseName = errors.New("invalid Course Name")
@@ -85,12 +85,12 @@ func NewCourseName(value string) (CourseName, error) {
 	}
 
 	return CourseName{
-		value: courseNameString,
+		Value: courseNameString,
 	}, nil
 }
 
 type CourseDuration struct {
-	value string
+	Value string
 }
 
 var ErrInvalidCourseDuration = errors.New("invalid Course duration")
@@ -101,10 +101,11 @@ func NewCourseDuration(value string) (CourseDuration, error) {
 	}
 
 	return CourseDuration{
-		value: value,
+		Value: value,
 	}, nil
 }
 
 type CourseRepository interface {
 	Save(ctx context.Context, course Course) error
+	ById(courseId CourseId) (Course, error)
 }

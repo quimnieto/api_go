@@ -4,6 +4,7 @@ import (
 	"api_go/internal/platform/server/handler/courses"
 	"api_go/internal/platform/server/handler/health"
 	"api_go/kit/command"
+	"api_go/kit/query"
 	"fmt"
 	"log"
 
@@ -15,15 +16,17 @@ type Server struct {
 	httpAddr string
 
 	// dependencies
-	commandBus command.Bus
+	commandBus command.CommandBus
+	queryBus   query.QueryBus
 }
 
-func New(host string, port uint, commandBus command.Bus) Server {
+func New(host string, port uint, commandBus command.CommandBus, queryBus query.QueryBus) Server {
 	server := Server{
 		engine:   gin.New(),
 		httpAddr: fmt.Sprintf("%s:%d", host, port),
 
 		commandBus: commandBus,
+		queryBus:   queryBus,
 	}
 
 	server.registerRoutes()
