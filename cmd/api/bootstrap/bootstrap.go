@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"api_go/internal/create"
+	"api_go/internal/platform/bus"
 	"api_go/internal/platform/server"
 	"api_go/internal/platform/storage/mysql"
 	"database/sql"
@@ -30,10 +31,14 @@ func Run() error {
 		return err
 	}
 
+	commandBus := bus.NewCommandBus()
+
 	courseRepository := mysql.NewCourseRepository(db)
 	courseCreator := create.NewCourseCreator(courseRepository)
+	createCourseCommandHandler := create.NewCreateCourseCommandHandler(courseCreator)
+	commandBus.Register(create.CourseCommandType, createCourseCommandHandler)
 
-	srv := server.New(host, port, courseCreator)
+	srv := server.New(host, port, commandBus)
 
 	return srv.Run()
 }

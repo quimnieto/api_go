@@ -2,6 +2,7 @@ package courses
 
 import (
 	"api_go/internal/create"
+	"api_go/kit/command"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,7 @@ type createCourseRequest struct {
 	Duration string `json:"duration" binding:"required"`
 }
 
-func CreateCourseHandler(courseCreator create.CourseCreator) gin.HandlerFunc {
+func CreateCourseHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req createCourseRequest
 
@@ -22,7 +23,8 @@ func CreateCourseHandler(courseCreator create.CourseCreator) gin.HandlerFunc {
 			return
 		}
 
-		err := courseCreator.CreateCourse(ctx, req.Id, req.Name, req.Duration)
+		command := create.NewCreateCourseCommand(req.Id, req.Name, req.Duration)
+		err := commandBus.Dispatch(ctx, command)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, err.Error())
