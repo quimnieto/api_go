@@ -1,6 +1,7 @@
 package server
 
 import (
+	"api_go/internal/create"
 	"api_go/internal/platform/server/handler/courses"
 	"api_go/internal/platform/server/handler/health"
 	"fmt"
@@ -12,25 +13,30 @@ import (
 type Server struct {
 	engine   *gin.Engine
 	httpAddr string
+
+	// dependencies
+	courseCreator create.CourseCreator
 }
 
-func New(host string, port uint) Server {
-	srv := Server{
+func New(host string, port uint, courseCreator create.CourseCreator) Server {
+	server := Server{
 		engine:   gin.New(),
 		httpAddr: fmt.Sprintf("%s:%d", host, port),
+
+		courseCreator: courseCreator,
 	}
 
-	srv.registerRoutes()
+	server.registerRoutes()
 
-	return srv
+	return server
 }
 
-func (s *Server) Run() error {
-	log.Println("Server running on", s.httpAddr)
-	return s.engine.Run(s.httpAddr)
+func (server *Server) Run() error {
+	log.Println("Server running on", server.httpAddr)
+	return server.engine.Run(server.httpAddr)
 }
 
-func (s *Server) registerRoutes() {
-	s.engine.GET("/health", health.CheckHandler())
-	s.engine.POST("/courses", courses.CreateCourseHandler())
+func (server *Server) registerRoutes() {
+	server.engine.GET("/health", health.CheckHandler())
+	server.engine.POST("/courses", courses.CreateCourseHandler(server.courseCreator))
 }
